@@ -12,6 +12,7 @@ def sign_up(request):
                 username=request.POST['username'],
                 password=request.POST['password'],
             )
+            new_user.save()
             
             auth.login(request, new_user)
             return redirect('index')
