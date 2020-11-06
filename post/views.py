@@ -8,32 +8,27 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-
 def index(request):
     return render(request, 'index.html')
-
 
 def new(request):
     return render(request, 'new.html')
 
-
 def lists(request):
     post = Post.objects.all()
     context = {
-        'post': post
+        'post' : post
     }
     return render(request, 'lists.html', context)
 
-
 def detail(request, post_id):
     post = Post.objects.get(id=post_id)
-    comment = Comment.objects.filter(post=post_id)
+    comments = Comment.objects.filter(post=post_id)
     context = {
-        'post': post,
-        'comment': comment
+        'post' : post,
+        'comments' : comments
     }
     return render(request, 'detail.html', context)
-
 
 def create(request):
     title = request.POST['title']
@@ -42,14 +37,12 @@ def create(request):
     post.save()
     return redirect('post:detail', post_id=post.id)
 
-
 def edit(request, post_id):
     post = Post.objects.get(id=post_id)
     context = {
         'post' : post
     }
     return render(request, 'edit.html', context)
-
 
 def update(request, post_id):
     post = Post.objects.get(id=post_id)
@@ -59,21 +52,20 @@ def update(request, post_id):
     post.save()
     return redirect('post:detail', post_id=post.id)
 
-
 def delete(request, post_id):
     post = Post.objects.get(id=post_id)
     post.delete()
     return redirect('post:lists')
 
-
 @login_required
-def commentcreate(request, post_id):
+def create_comment(request, post_id):
     user = request.user
     post_id = post_id
     content = request.POST['content']
     comment = Comment(user=user, post_id=post_id, content=content, created_at=timezone.now())
     comment.save()
     return redirect('post:detail', post_id=post_id)
+
 
 
 @login_required
